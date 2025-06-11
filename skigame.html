@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ski Jump Game</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #eef;
+            text-align: center;
+        }
+        
+        #startScreen,
+        #gameOverScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+        
+        canvas {
+            background: #ccf;
+            display: block;
+            margin: 0 auto;
+            border: 4px solid #333;
+        }
+        
+        #score {
+            font-size: 1.5em;
+            margin-top: 10px;
+            color: #222;
+        }
+        
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            margin-top: 20px;
+            cursor: pointer;
+            border-radius: 8px;
+            border: none;
+        }
+        
+        #gameContainer {
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="gameContainer">
+        <div id="startScreen">
+            <h1>Ski Jump Game</h1>
+            <p>Press SPACE to jump over trees. Avoid crashing!</p>
+            <button onclick="startGame()">Start Game</button>
+        </div>
+
+        <div id="gameOverScreen" style="display: none;">
+            <h1>Game Over</h1>
+            <p>Your Score: <span id="finalScore"></span></p>
+            <button onclick="restartGame()">Restart</button>
+            <br><br>
+            <a href="index.html" style="color: white; text-decoration: underline; font-size: 1.2em;">Return to Skiing Page</a>
+        </div>
+
+
+        <canvas id="gameCanvas" width="800" height="400"></canvas>
+        <div id="score">Score: 0</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const skierImg = new Image();
+        skierImg.src = "assets/skier.png"; // use your skier image here
+
+        const treeImg = new Image();
+        treeImg.src = "assets/tree.jpg"; // image for the obstacle
+
+        const skier = {
+            x: 50,
+            y: 300,
+            width: 50,
+            height: 50,
+            velocityX: 0,
+            velocityY: 0,
+            gravity: 1,
+            jumpPower: -30, // Shorter jump
+            grounded: true
+        };
+
+
+
+        let trees = [];
+        let score = 0;
+        let gameRunning = false;
+        let gameLoopInterval;
+
+        function drawSkier() {
+            ctx.drawImage(skierImg, skier.x, skier.y, skier.width, skier.height);
+        }
+
+        function drawTrees() {
+            for (let i = 0; i < trees.length; i++) {
+                ctx.drawImage(treeImg, trees[i].x, trees[i].y, trees[i].width, trees[i].height);
+            }
+        }
+
+        function updateTrees() {
+            for (let i = 0; i < trees.length; i++) {
+                trees[i].x -= 5;
+            }
+            if (trees.length > 0 && trees[0].x + trees[0].width < 0) {
+                trees.shift();
+                score++;
+                document.getElementById("score").textContent = "Score: " + score;
+            }
+        }
+
+        function checkCollision() {
+            for (let tree of trees) {
+                if (
+                    skier.x < tree.x + tree.width &&
+                    skier.x + skier.width > tree.x &&
+                    skier.y < tree.y + tree.height &&
+                    skier.y + skier.height > tree.y
+                ) {
+                    endGame();
+                }
+            }
+        }
+
+        function jump() {
+            if (skier.grounded) {
+                skier.velocityY = skier.jumpPower;
+                skier.velocityX = 20; // Move forward while in the air
+                skier.grounded = false;
+            }
+        }
+
+
+        function updateGame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            skier.velocityY += skier.gravity;
+            skier.y += skier.velocityY;
+
+            if (skier.y + skier.height >= canvas.height) {
+                skier.y = canvas.height - skier.height;
+                skier.velocityY = 0;
+                skier.grounded = true;
+            }
+
+            drawSkier();
+            updateTrees();
+            drawTrees();
+            checkCollision();
+
+            if (Math.random() < 0.02) {
+                trees.push({
+                    x: canvas.width,
+                    y: canvas.height - 50,
+                    width: 40,
+                    height: 50
+                });
+            }
+        }
+
+        function startGame() {
+            document.getElementById("startScreen").style.display = "none";
+            document.getElementById("gameOverScreen").style.display = "none";
+            trees = [];
+            score = 0;
+            skier.y = canvas.height - skier.height;
+            skier.velocityY = 0;
+            skier.grounded = true;
+            document.getElementById("score").textContent = "Score: 0";
+            gameRunning = true;
+            gameLoopInterval = setInterval(updateGame, 30);
+        }
+
+        function endGame() {
+            gameRunning = false;
+            clearInterval(gameLoopInterval);
+            document.getElementById("finalScore").textContent = score;
+            document.getElementById("gameOverScreen").style.display = "flex";
+        }
+
+        function restartGame() {
+            startGame();
+        }
+
+        document.addEventListener("keydown", function(e) {
+            if (e.code === "Space" && gameRunning) {
+                jump();
+            }
+        });
+    </script>
+</body>
+
+</html>

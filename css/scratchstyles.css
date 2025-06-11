@@ -1,0 +1,67 @@
+.wholewebsite {
+    background-color: lightgrey;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: black;
+    margin: 0;
+    padding: 0 20px;
+    line-height: 1.6;
+}
+
+.title {
+    text-align: center;
+    color: rgb(42, 74, 88);
+    margin-top: 30px;
+}
+
+.smallheader {
+    color: rgb(42, 74, 88);
+    margin-top: 40px;
+}
+
+nav {
+    text-align: center;
+    margin: 20px 0;
+}
+
+nav a {
+    margin: 0 15px;
+    color: navy;
+    text-decoration: underline;
+    font-weight: bold;
+    font-size: 1.1em;
+    border: none;
+    padding: 0;
+    transition: color 0.2s ease;
+}
+
+nav a:hover {
+    color: rgb(91, 191, 231);
+}
+
+ol {
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
+ol li {
+    margin-bottom: 5px;
+}
+
+ul {
+    margin-left: 40px;
+    margin-bottom: 10px;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 20px auto;
+    border-radius: 8px;
+}
+
+iframe {
+    display: block;
+    margin: 30px auto;
+    border-radius: 8px;
+}

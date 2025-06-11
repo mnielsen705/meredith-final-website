@@ -1,0 +1,34 @@
+.headercolor {
+    color: rosybrown;
+}
+
+.symbolbox {
+    background-color: rosybrown;
+    ;
+}
+
+.navname {
+    color: rosybrown;
+}
+
+.barcolor {
+    color: black;
+}
+
+.resumehead {
+    color: gray;
+}
+
+.educationtitle {
+    color: lightcoral;
+}
+
+.experiencetitle {
+    color: rgb(49, 90, 49);
+}
+
+.smaller-image {
+    width: auto;
+    max-width: 800px;
+    height: auto;
+}
